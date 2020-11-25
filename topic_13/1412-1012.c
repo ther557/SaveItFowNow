@@ -1,5 +1,4 @@
 #include <stdio.h>
-#include <stdbool.h>
 #include <malloc.h>
 
 typedef struct node {
@@ -8,10 +7,9 @@ typedef struct node {
 } Node, *Link;
 
 Link NewList(int arr[], int n);
-bool DeleteNode(Link head, int x); //x为要删除的数据
+Link DeleteNode(Link head, int x);
 void ClearLink(Link head);
 void bubble_sort(int arr[], int n);
-void SaveData(Link head, int *arr[], int n);
 void DisplayNode(Link head);
 
 int main() {
@@ -24,12 +22,11 @@ int main() {
     Link head;
     head = (Link)malloc(sizeof(Node));
     head = NewList(arr, n);
-    bool m;
     for (int i = 0; i < n; i++) {
         for (int j = i; j < n; j++) {
             if (arr[i] == arr[j]) {
                 x = arr[j];
-                m = DeleteNode(head, x);
+                head=DeleteNode(head, x);
             }
         }
     }
@@ -66,27 +63,26 @@ Link NewList(int arr[], int n) {
     return head;
 }
 
-bool DeleteNode(Link head, int x) {
+Link DeleteNode(Link head, int x) {
     Link p, q;
     int cnt = 0;
     if (head == NULL || head->next == NULL) {
-        return false;
+        return head;
     }
-    p = head->next;
-    q = head;
-    while (p != NULL) {
-        if (p->data == x && cnt > 0) {
-            q->next = p->next;
-            free(p);
-            cnt = 0;
-            return true;
-        } else {
-            q = p;
-            p = p->next;
-            cnt++;
+    while (x!=p->data&&p->next!=NULL&&cnt==0){
+        q=p;
+        p=p->next;
+        cnt++;
+    }
+    if(x==p->data&&cnt!=0){
+        if(p==head){
+            head=p->next;
+        }else{
+            q->next=p->next;
         }
+        free(p);
     }
-    return false;
+    return head;
 }
 
 void ClearLink(Link head) {
